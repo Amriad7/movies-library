@@ -1,0 +1,170 @@
+import CastAvatar from "@/components/cast-avatar";
+import List from "@/components/list";
+import MediaCard from "@/components/media-card";
+import Section from "@/components/section";
+import Tag from "@/components/tag";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn, getLanguageName, getYear } from "@/lib/utils";
+import { MovieExtended } from "@/types";
+import {
+  Bookmark,
+  Clock,
+  Heart,
+  Play,
+  Star,
+  Clipboard,
+  LucideIcon,
+} from "lucide-react";
+
+const fetchMovie = async (id: string): Promise<MovieExtended> => {
+  const url = `https://api.themoviedb.org/3/movie/${id}?append_to_response=keywords,credits,recommendations`;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+    },
+  };
+
+  return fetch(url, options)
+    .then((res) => res.json())
+    .then((data) => ({
+      ...data,
+      recommendations: {
+        results: data.recommendations.results.map((r: any) => ({
+          ...r,
+          type: "movie" as const,
+        })),
+      },
+    }))
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+const MediaPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params).id;
+  const {
+    title,
+    overview,
+    backdrop_path,
+    poster_path,
+    release_date,
+    vote_average,
+    runtime,
+    genres,
+    status,
+    credits,
+    recommendations,
+    original_language,
+    keywords,
+  } = await fetchMovie(id);
+
+  const year = getYear(release_date);
+  const rating = Math.floor(vote_average * 10) / 10;
+  const language = getLanguageName.of(original_language);
+
+  return (
+    <div>
+      {/* PAGE HERO */}
+      <div className="relative bg-black">
+        {/* Backdrop */}
+        <img
+          src={`https://image.tmdb.org/t/p/w1280${backdrop_path}`}
+          alt="poster"
+          className="w-full aspect-[2] min-h-[360] mask-b-to-transparent object-cover"
+        />
+        <div className="absolute left-12 bottom-8 flex flex-col sm:flex-row gap-8 pr-4 ">
+          {/* Poster */}
+          <img
+            src={`https://image.tmdb.org/t/p/w500${poster_path}`}
+            alt="poster"
+            className="aspect-auto w-0 sm:w-56 rounded-lg"
+          />
+          {/* Informations */}
+          <div className="flex flex-col justify-center gap-5">
+            <Badge className="px-3 py-1">{year}</Badge>
+            <h2 className="text-4xl font-extrabold">{title}</h2>
+            <div className="flex items-center flex-wrap gap-6">
+              <Tag Icon={Star}>{rating}</Tag>
+              <Tag Icon={Clock}>{runtime} min</Tag>
+              <Tag Icon={Clipboard}>{genres.map((g) => g.name).join(", ")}</Tag>
+            </div>
+            {/* Actions */}
+            <div className="flex items-center flex-wrap gap-3 mt-10">
+              <Button size={"lg"}>
+                <Play />
+                WATCH TRAILER
+              </Button>
+              <Button size={"lg"} variant={"secondary"}>
+                <Bookmark />
+                WISHLIST
+              </Button>
+              <Button size={"icon-lg"} variant={"secondary"}>
+                <Heart />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* PAGE CONTENT */}
+      <div className="flex flex-col sm:flex-row gap-8 p-12">
+        {/* Left Column */}
+        <div className="flex-3 space-y-12 min-w-0">
+          <Section title={"OVERVIEW"}>{overview}</Section>
+          <Section title={"CAST"}>
+            <ScrollArea className="pb-8 h-46 border">
+              <div className="flex gap-10">
+                {credits.cast.map((cast) => (
+                  <CastAvatar key={cast.id} cast={cast} />
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </Section>
+          <Section title={"RECOMMENDATIONS"}>
+            <ScrollArea className="pb-8 h-100 border">
+              <div className="flex gap-10">
+                {recommendations.results.map((movie) => (
+                  <MediaCard key={movie.id} media={movie} />
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </Section>
+        </div>
+        {/* Right Column */}
+        <div className="flex-1 space-y-12 ">
+          <Section title="DETAILS" filled>
+            <List
+              items={[
+                { name: "STATUS", value: status },
+                {
+                  name: "LANGUAGE",
+                  value: language,
+                },
+                {
+                  name: "RELEASE DATE",
+                  value: release_date,
+                },
+              ]}
+            />
+          </Section>
+          <Section title="KEYWORDS" filled>
+            <div className="flex flex-wrap gap-4">
+              {keywords.keywords.map(({ id, name }) => (
+                <Badge variant={"outline"} key={id}>
+                  {name}
+                </Badge>
+              )) || "No keywords found"}
+            </div>
+          </Section>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MediaPage;
