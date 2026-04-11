@@ -5,45 +5,11 @@ import Section from "@/components/section";
 import Tag from "@/components/tag";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { API } from "@/lib/data";
 import { getLanguageName, getYear } from "@/lib/utils";
-import { MovieExtended } from "@/types";
-import {
-  Bookmark,
-  Clock,
-  Heart,
-  Play,
-  Star,
-  Clipboard,
-  LucideIcon,
-} from "lucide-react";
+import { Bookmark, Clock, Heart, Play, Star, Clipboard } from "lucide-react";
 
-const fetchMovie = async (id: string): Promise<MovieExtended> => {
-  const url = `https://api.themoviedb.org/3/movie/${id}?append_to_response=keywords,credits,recommendations`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-    },
-  };
-
-  return fetch(url, options)
-    .then((res) => res.json())
-    .then((data) => ({
-      ...data,
-      recommendations: {
-        results: data.recommendations.results.map((r: any) => ({
-          ...r,
-          type: "movie" as const,
-        })),
-      },
-    }))
-    .catch((err) => {
-      console.error(err);
-    });
-};
-
-const MediaPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+const MoviePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
   const {
     title,
@@ -59,7 +25,7 @@ const MediaPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     recommendations,
     original_language,
     keywords,
-  } = await fetchMovie(id);
+  } = await API.getMovie(id);
 
   const year = getYear(release_date);
   const rating = Math.floor(vote_average * 10) / 10;
@@ -164,4 +130,4 @@ const MediaPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   );
 };
 
-export default MediaPage;
+export default MoviePage;

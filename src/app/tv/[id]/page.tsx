@@ -5,6 +5,7 @@ import Section from "@/components/section";
 import Tag from "@/components/tag";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { API } from "@/lib/data";
 import { getLanguageName, getYear } from "@/lib/utils";
 import { SerieExtended } from "@/types";
 import { Bookmark, Clock, Heart, Play, Star, Clipboard } from "lucide-react";
@@ -53,7 +54,7 @@ const SeriePage = async ({ params }: { params: Promise<{ id: string }> }) => {
     number_of_episodes,
     number_of_seasons,
     keywords,
-  } = await fetchSerie(id);
+  } = await API.getSerie(id);
 
   const year = getYear(first_air_date);
   const rating = Math.floor(vote_average * 10) / 10;

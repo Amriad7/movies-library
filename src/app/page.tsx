@@ -3,41 +3,9 @@ import ListPagination from "@/components/list-pagination";
 import ListSelect from "@/components/list-select";
 import MediaCard from "@/components/media-card";
 import MediaToggle from "@/components/media-toggle";
-import { Media, MediaType } from "@/types";
+import { API } from "@/lib/data";
+import { Media } from "@/types";
 import * as z from "zod";
-
-const fetchMedia = async (
-  type: MediaType,
-  list: string,
-  page: number
-): Promise<{
-  page: number;
-  results: Media[];
-  total_pages: number;
-  total_results: number;
-}> => {
-  const url = `https://api.themoviedb.org/3/${type}/${list}?page=${page}`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-    },
-  };
-
-  return fetch(url, options)
-    .then((res) => res.json())
-    .then((data) => {
-      return {
-        ...data,
-        total_pages: Math.min(data.total_pages, 500),
-        results: data.results.map((m: any) => ({ ...m, type })),
-      };
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-};
 
 const SearchParams = z.intersection(
   z
@@ -77,7 +45,7 @@ export default async function Home({
     results: medias,
     total_results,
     total_pages,
-  } = await fetchMedia(type, list, page);
+  } = await API.getMediaList(type, list, page);
 
   return (
     <div className="space-y-8 p-8">

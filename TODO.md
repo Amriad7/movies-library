@@ -9,18 +9,19 @@
 [x] add recommendation section
 [x] add serie page
 [x] reorganise movie page
-
 [x] fix pagination
 [x] fix home page layout
 [x] fix types/props
 [ ] rewrite comps props (cn, children ..)
-[ ] axios api caller
+[x] axios api caller
 [x] add some responsiveness
 [x] fix media page mobile size!
 [x] fix multiple things not working on mobile
+[ ] combine movie & tv in singelar page
+[ ] homepage card columns based on container query
 
 # Nice to have
 
-[ ] add alt proprity
+[ ] add alt property
 [ ] add nextjs image
 [ ] add skeleton/loaders
