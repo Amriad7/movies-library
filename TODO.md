@@ -17,7 +17,7 @@
 [ ] axios api caller
 [x] add some responsiveness
 [x] fix media page mobile size!
-[ ] fix multiple things not working on mobile
+[x] fix multiple things not working on mobile
 
 # Nice to have
 

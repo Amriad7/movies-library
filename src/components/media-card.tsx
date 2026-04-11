@@ -46,7 +46,7 @@ const MediaCard = ({ media }: { media: Media }) => {
     <Link href={`/${type}/${id}`}>
       <div className="relative space-y-4 min-w-48">
         <Badge className="absolute right-3 top-3 z-10">
-          <Star size={8} fill="sidebar-primary" />
+          <Star fill="sidebar-primary" />
           <span>{rating}</span>
         </Badge>
 

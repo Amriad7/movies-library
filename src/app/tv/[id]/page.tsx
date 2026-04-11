@@ -5,7 +5,6 @@ import Section from "@/components/section";
 import Tag from "@/components/tag";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { getLanguageName, getYear } from "@/lib/utils";
 import { SerieExtended } from "@/types";
 import { Bookmark, Clock, Heart, Play, Star, Clipboard } from "lucide-react";
@@ -61,33 +60,33 @@ const SeriePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const language = getLanguageName.of(original_language);
 
   return (
-    <div>
+    <div className="@container/page">
       {/* PAGE HERO */}
-      <div className="relative bg-black">
+      <div className="relative w-full flex @2xl/page:items-end p-8 @2xl/page:p-12 aspect-[2] min-h-[360] max-h-[720] bg-black">
         {/* Backdrop */}
         <img
           src={`https://image.tmdb.org/t/p/w1280${backdrop_path}`}
           alt="poster"
-          className="w-full aspect-[2] mask-b-to-transparent"
+          className="absolute top-0 left-0 w-full h-full object-cover mask-b-to-transparent"
         />
-        <div className="absolute left-12 bottom-8 flex gap-8 ">
+        <div className="flex items-center gap-0 @2xl/page:gap-8">
           {/* Poster */}
           <img
             src={`https://image.tmdb.org/t/p/w500${poster_path}`}
             alt="poster"
-            className="aspect-auto w-56 rounded-lg"
+            className="aspect-auto w-0 @2xl/page:w-56 rounded-lg z-10"
           />
           {/* Informations */}
-          <div className="flex flex-col justify-center gap-5">
+          <div className="flex flex-col justify-center gap-5 z-10">
             <Badge className="px-3 py-1">{year}</Badge>
             <h2 className="text-4xl font-extrabold">{name}</h2>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center flex-wrap gap-6">
               <Tag Icon={Star}>{rating}</Tag>
-              <Tag Icon={Clock}>{episode_run_time[0] || 0} min</Tag>
+              <Tag Icon={Clock}>{episode_run_time[0]} min</Tag>
               <Tag Icon={Clipboard}>{genres.map((g) => g.name).join(", ")}</Tag>
             </div>
             {/* Actions */}
-            <div className="flex items-center gap-3 mt-10">
+            <div className="flex items-center flex-wrap gap-3 mt-8">
               <Button size={"lg"}>
                 <Play />
                 WATCH TRAILER
@@ -104,29 +103,25 @@ const SeriePage = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </div>
       {/* PAGE CONTENT */}
-      <div className="flex gap-8 p-12">
+      <div className="flex flex-col sm:flex-row gap-8 p-8 @2xl/page:p-12">
         {/* Left Column */}
         <div className="flex-2 space-y-12 min-w-0">
           <Section title={"OVERVIEW"}>{overview}</Section>
-          <Section title={"CAST"}>
-            <ScrollArea className="py-8">
-              <div className="flex gap-10">
-                {credits.cast.map((cast) => (
-                  <CastAvatar key={cast.id} cast={cast} />
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
+          <Section title={"CAST"} scrollable>
+            <div className="flex gap-10">
+              {credits.cast.length
+                ? credits.cast.map((cast) => (
+                    <CastAvatar key={cast.id} cast={cast} />
+                  ))
+                : "No casts found"}
+            </div>
           </Section>
-          <Section title={"RECOMMENDATIONS"}>
-            <ScrollArea className="py-8">
-              <div className="flex gap-10">
-                {recommendations.results.map((serie) => (
-                  <MediaCard key={serie.id} media={serie} />
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
+          <Section title={"RECOMMENDATIONS"} scrollable>
+            <div className="flex gap-10">
+              {recommendations.results.map((serie) => (
+                <MediaCard key={serie.id} media={serie} />
+              ))}
+            </div>
           </Section>
         </div>
         {/* Right Column */}
@@ -156,11 +151,13 @@ const SeriePage = async ({ params }: { params: Promise<{ id: string }> }) => {
           </Section>
           <Section title="KEYWORDS" filled>
             <div className="flex flex-wrap gap-4">
-              {keywords.results.map(({ id, name }) => (
-                <Badge variant={"outline"} key={id}>
-                  {name}
-                </Badge>
-              )) || "No keywords found"}
+              {keywords.results.length
+                ? keywords.results.map(({ id, name }) => (
+                    <Badge variant={"outline"} key={id}>
+                      {name}
+                    </Badge>
+                  ))
+                : "No keywords found"}
             </div>
           </Section>
         </div>

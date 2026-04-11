@@ -95,7 +95,7 @@ export default async function Home({
             <ListSelect type={type} currentList={list} />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-12 gap-x-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-y-12 gap-x-8">
             {medias.map((media: Media) => (
               <MediaCard key={media.id} media={media} />
             ))}
