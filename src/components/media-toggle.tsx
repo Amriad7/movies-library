@@ -18,12 +18,12 @@ const MediaToggle = () => {
         value={type}
       >
         <ToggleGroupItem value="movie" className="px-8" asChild>
-          <Link href={"./?type=movie"}>
+          <Link href={"?type=movie"}>
             <Clapperboard /> Movies
           </Link>
         </ToggleGroupItem>
         <ToggleGroupItem value="tv" className="px-8" asChild>
-          <Link href={"./?type=tv"}>
+          <Link href={"?type=tv"}>
             <Tv /> Series
           </Link>
         </ToggleGroupItem>

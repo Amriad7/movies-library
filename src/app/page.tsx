@@ -1,5 +1,5 @@
 import Heading from "@/components/heading";
-import ListPagination from "@/components/list-pagination";
+import MediaPagination from "@/components/media-pagination";
 import ListSelect from "@/components/list-select";
 import MediaCard from "@/components/media-card";
 import MediaToggle from "@/components/media-toggle";
@@ -69,9 +69,8 @@ export default async function Home({
             ))}
           </div>
 
-          <ListPagination
-            type={type}
-            currentList={list}
+          <MediaPagination
+            params={{ type, list }}
             currentPage={page}
             totalPages={total_pages}
           />

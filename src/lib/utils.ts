@@ -16,3 +16,9 @@ export function getYear(date: string) {
 export const getLanguageName = new Intl.DisplayNames(["en"], {
   type: "language",
 });
+
+export const searchParamsToString = (params: object) => {
+  return `?${Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&")}`;
+};

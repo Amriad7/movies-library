@@ -7,34 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { API } from "@/lib/data";
 import { getLanguageName, getYear } from "@/lib/utils";
-import { SerieExtended } from "@/types";
 import { Bookmark, Clock, Heart, Play, Star, Clipboard } from "lucide-react";
-
-const fetchSerie = async (id: string): Promise<SerieExtended> => {
-  const url = `https://api.themoviedb.org/3/tv/${id}?append_to_response=keywords,credits,recommendations`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-    },
-  };
-
-  return fetch(url, options)
-    .then((res) => res.json())
-    .then((data) => ({
-      ...data,
-      recommendations: {
-        results: data.recommendations.results.map((r: any) => ({
-          ...r,
-          type: "tv" as const,
-        })),
-      },
-    }))
-    .catch((err) => {
-      console.error(err);
-    });
-};
 
 const SeriePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;

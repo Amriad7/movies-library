@@ -11,7 +11,8 @@ const toggleVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-transparent",
+        default:
+          "bg-secondary text-sidebar-foreground data-[state=on]:bg-accent data-[state=on]:text-sidebar-primary-foreground data-[state=on]:[&_svg]:fill-sidebar-primary-foreground",
         primary:
           "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground",
         outline:

@@ -23,7 +23,7 @@ const Section = ({
         )}
       >
         {scrollable ? (
-          <ScrollArea className="pt-2 pb-6">
+          <ScrollArea className="pt-1 pb-8">
             {children}
             <ScrollBar orientation="horizontal" />
           </ScrollArea>

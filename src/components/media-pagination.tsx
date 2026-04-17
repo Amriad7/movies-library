@@ -10,17 +10,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { clamp } from "@/lib/utils";
-import { MediaType } from "@/types";
+import { clamp, searchParamsToString } from "@/lib/utils";
 
-const ListPagination = ({
-  type,
-  currentList,
+const MediaPagination = ({
+  params,
   currentPage,
   totalPages,
 }: {
-  type: MediaType;
-  currentList: string;
+  params: object;
   currentPage: number;
   totalPages: number;
 }) => {
@@ -31,7 +28,7 @@ const ListPagination = ({
 
   const handlePageInputChange = () => {
     const moveToPage = clamp(Number(page) || 1, 1, totalPages);
-    router.push(`?type=${type}&list=${currentList}&page=${moveToPage}`);
+    router.push(searchParamsToString({ ...params, page: moveToPage }));
   };
 
   useEffect(() => {
@@ -41,7 +38,7 @@ const ListPagination = ({
   return (
     <div className="flex items-center justify-center gap-2">
       <Button size={"icon"} asChild>
-        <Link href={`?type=${type}&list=${currentList}&page=${prevPage}`}>
+        <Link href={searchParamsToString({ ...params, page: prevPage })}>
           <ChevronLeft />
         </Link>
       </Button>
@@ -59,7 +56,7 @@ const ListPagination = ({
         <InputGroupAddon align="inline-end"> / {totalPages}</InputGroupAddon>
       </InputGroup>
       <Button size={"icon"} asChild>
-        <Link href={`?type=${type}&list=${currentList}&page=${nextPage}`}>
+        <Link href={searchParamsToString({ ...params, page: nextPage })}>
           <ChevronRight />
         </Link>
       </Button>
@@ -67,4 +64,4 @@ const ListPagination = ({
   );
 };
 
-export default ListPagination;
+export default MediaPagination;

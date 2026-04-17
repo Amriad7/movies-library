@@ -1,28 +1,12 @@
 import { Star } from "lucide-react";
 import { Badge } from "./ui/badge";
-import Link from "next/link";
-import { Genre, Media, MediaType } from "@/types";
+import { Media, MediaType } from "@/types";
 import { getYear } from "@/lib/utils";
+import { API } from "@/lib/data";
+import Link from "next/link";
 
-async function fetchGenres(type: string) {
-  const url = `https://api.themoviedb.org/3/genre/${type}/list?language=en`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-    },
-  };
-
-  return fetch(url, options)
-    .then((res) => res.json())
-    .catch((err) => {
-      console.error(err);
-    });
-}
-
-const movieGenres: Genre[] = (await fetchGenres("movie")).genres;
-const serieGenres: Genre[] = (await fetchGenres("tv")).genres;
+const movieGenres = await API.getAllGenres("movie");
+const serieGenres = await API.getAllGenres("tv");
 
 export function getGenreName(id: number, type: MediaType) {
   return (
@@ -35,7 +19,7 @@ export function getGenreName(id: number, type: MediaType) {
 const MediaCard = ({ media }: { media: Media }) => {
   const { id, type, genre_ids, poster_path, vote_average } = media;
 
-  const genre = getGenreName(genre_ids[0], type);
+  const genre = getGenreName(genre_ids?.at(0) || 0, type);
   const rating = Math.floor(vote_average * 10) / 10;
   const title = type === "movie" ? media.title : media.name;
   const year = getYear(

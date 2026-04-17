@@ -11,6 +11,7 @@ import { Bookmark, Clock, Heart, Play, Star, Clipboard } from "lucide-react";
 
 const MoviePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
+
   const {
     title,
     overview,
