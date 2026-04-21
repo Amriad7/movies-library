@@ -1,53 +1,74 @@
-import CastAvatar from "@/components/cast-avatar";
-import List from "@/components/list";
 import MediaCard from "@/components/media-card";
-import Section from "@/components/section";
+import CastAvatar from "@/components/cast-avatar";
+import DescriptionList from "@/components/description-list";
+import ListPlaceholder from "@/components/list-placeholder";
+
 import Tag from "@/components/tag";
+import Section from "@/components/section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { API } from "@/lib/data";
-import { getLanguageName, getYear } from "@/lib/utils";
+import Image from "next/image";
+
 import { Bookmark, Clock, Heart, Play, Star, Clipboard } from "lucide-react";
+
+import { API } from "@/lib/data";
+import { formatRuntime, getLanguageName, getYear } from "@/lib/utils";
+import posterPlaceholder from "@/assets/poster-placeholder.png";
+import placeholder from "@/assets/placeholder.png";
 
 const MoviePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
 
   const {
     title,
+    genres,
+    status,
+    runtime,
+    credits,
     overview,
-    backdrop_path,
+    keywords,
     poster_path,
     release_date,
     vote_average,
-    runtime,
-    genres,
-    status,
-    credits,
+    backdrop_path,
     recommendations,
     original_language,
-    keywords,
   } = await API.getMovie(id);
 
   const year = getYear(release_date);
   const rating = Math.floor(vote_average * 10) / 10;
   const language = getLanguageName.of(original_language);
+  const time = formatRuntime(runtime);
 
   return (
-    <div className="@container/page">
+    <div className="@container">
       {/* PAGE HERO */}
-      <div className="relative w-full flex @2xl/page:items-end p-8 @2xl/page:p-12 aspect-[2] min-h-[360] max-h-[720] bg-black">
+      <div className="relative w-full flex @2xl:items-end p-8 @2xl:p-12 aspect-[2] min-h-[360] max-h-[720] bg-black">
         {/* Backdrop */}
-        <img
-          src={`https://image.tmdb.org/t/p/w1280${backdrop_path}`}
+        <Image
+          width={1280}
+          height={720}
           alt="poster"
+          loading="eager"
+          src={
+            backdrop_path
+              ? `https://image.tmdb.org/t/p/w1280${backdrop_path}`
+              : posterPlaceholder
+          }
           className="absolute top-0 left-0 w-full h-full object-cover mask-b-to-transparent"
         />
-        <div className="flex items-center gap-0 @2xl/page:gap-8">
+        <div className="flex items-center gap-0 @2xl:gap-8">
           {/* Poster */}
-          <img
-            src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-            alt="poster"
-            className="aspect-auto w-0 @2xl/page:w-56 rounded-lg z-10"
+          <Image
+            width={500}
+            height={750}
+            alt="Media Poster"
+            src={
+              poster_path
+                ? `https://image.tmdb.org/t/p/w500${poster_path}`
+                : placeholder
+            }
+            className="aspect-2/3 w-0 @2xl:w-56 rounded-lg z-10"
           />
           {/* Informations */}
           <div className="flex flex-col justify-center gap-5 z-10">
@@ -55,7 +76,7 @@ const MoviePage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <h2 className="text-4xl font-extrabold">{title}</h2>
             <div className="flex items-center flex-wrap gap-6">
               <Tag Icon={Star}>{rating}</Tag>
-              <Tag Icon={Clock}>{runtime} min</Tag>
+              <Tag Icon={Clock}>{time}</Tag>
               <Tag Icon={Clipboard}>{genres.map((g) => g.name).join(", ")}</Tag>
             </div>
             {/* Actions */}
@@ -76,18 +97,18 @@ const MoviePage = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </div>
       {/* PAGE CONTENT */}
-      <div className="flex flex-col sm:flex-row gap-8 p-8 @2xl/page:p-12">
+      <div className="flex flex-col @3xl:flex-row gap-8 p-8 @2xl:p-12">
         {/* Left Column */}
         <div className="flex-3 space-y-12 min-w-0">
           <Section title={"OVERVIEW"}>{overview}</Section>
           <Section title={"CAST"} scrollable>
-            <div className="flex gap-10">
-              {credits.cast.length
-                ? credits.cast.map((cast) => (
-                    <CastAvatar key={cast.id} cast={cast} />
-                  ))
-                : "No casts found"}
-            </div>
+            <ListPlaceholder list={credits.cast} placeholder="No casts found">
+              <div className="flex gap-10">
+                {credits?.cast?.map((cast, idx) => (
+                  <CastAvatar key={idx} cast={cast} />
+                ))}
+              </div>
+            </ListPlaceholder>
           </Section>
           <Section title={"RECOMMENDATIONS"} scrollable>
             <div className="flex gap-10">
@@ -100,7 +121,7 @@ const MoviePage = async ({ params }: { params: Promise<{ id: string }> }) => {
         {/* Right Column */}
         <div className="flex-1 space-y-12 ">
           <Section title="DETAILS" filled>
-            <List
+            <DescriptionList
               items={[
                 { name: "STATUS", value: status },
                 {
@@ -115,15 +136,18 @@ const MoviePage = async ({ params }: { params: Promise<{ id: string }> }) => {
             />
           </Section>
           <Section title="KEYWORDS" filled>
-            <div className="flex flex-wrap gap-4">
-              {keywords.keywords.length
-                ? keywords.keywords.map(({ id, name }) => (
-                    <Badge variant={"outline"} key={id}>
-                      {name}
-                    </Badge>
-                  ))
-                : "No keywords found"}
-            </div>
+            <ListPlaceholder
+              list={keywords.keywords}
+              placeholder="No keywords found"
+            >
+              <div className="flex flex-wrap gap-4">
+                {keywords.keywords.map(({ id, name }) => (
+                  <Badge variant={"outline"} key={id}>
+                    {name}
+                  </Badge>
+                ))}
+              </div>
+            </ListPlaceholder>
           </Section>
         </div>
       </div>

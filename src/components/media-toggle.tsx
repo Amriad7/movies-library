@@ -1,20 +1,17 @@
 "use client";
-import { Clapperboard, Tv } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { Clapperboard, Tv } from "lucide-react";
+import { MediaType } from "@/types";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
-const MediaToggle = () => {
-  /* use zod here? */
-  const searchParams = useSearchParams();
-  const type = searchParams.get("type") === "tv" ? "tv" : "movie";
+const MediaToggle = ({ type = "movie" }: { type: MediaType }) => {
   return (
     <div>
       <ToggleGroup
+        spacing={2}
         type="single"
         variant="primary"
-        spacing={2}
-        className="bg-card rounded-full p-1"
+        className="bg-card rounded-full p-1 m-auto"
         value={type}
       >
         <ToggleGroupItem value="movie" className="px-8" asChild>

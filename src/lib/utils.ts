@@ -17,6 +17,18 @@ export const getLanguageName = new Intl.DisplayNames(["en"], {
   type: "language",
 });
 
+export const formatRuntime = (runtime: number) => {
+  const hours = Math.floor(runtime / 60);
+  const mins = runtime % 60;
+
+  if (hours && mins) {
+    return `${hours} hr ${mins} min`;
+  } else if (hours) {
+    return `${hours} hrs`;
+  }
+  return `${mins} mins`;
+};
+
 export const searchParamsToString = (params: object) => {
   return `?${Object.entries(params)
     .map(([key, value]) => `${key}=${value}`)

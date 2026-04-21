@@ -18,16 +18,20 @@
 [x] fix media page mobile size!
 [x] fix multiple things not working on mobile
 [ ] combine movie & tv in singelar page
-[ ] homepage card columns based on container query
+[x] homepage card columns based on container query
 [x] create explore page
 [x] add search params
 [x] add filters
 [x] fix serie filters
-[ ] serie sort filter better parse
-[ ] overall code cleanup
+[x] serie sort filter better parse
+[x] overall code cleanup
+[x] no adult movies!
+[ ] watch trailer
 
 # Nice to have
 
-[ ] add alt property
-[ ] add nextjs image
-[ ] add skeleton/loaders
+[x] add alt property
+[x] add nextjs image
+[ ] add skeleton/loaders?
+[ ] multi language support
+[ ] add a real logo

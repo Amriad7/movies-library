@@ -15,6 +15,8 @@ import { Button } from "./ui/button";
 import { searchParamsToString } from "@/lib/utils";
 import { API } from "@/lib/data";
 import { Genre, MediaType } from "@/types";
+import { ExploreSearchParams } from "@/lib/validations";
+// import { movieGenres, serieGenres } from "./media-card";
 
 const sorts = {
   movie: [
@@ -101,29 +103,23 @@ const decades = [
   },
 ];
 
-type Params = {
-  type: MediaType;
-  page: number;
-  sortBy: string;
-  rating: string;
-  decade: string;
-  genre: string;
-};
+export const movieGenres = await API.getAllGenres("movie");
+export const serieGenres = await API.getAllGenres("tv");
 
 const MediaFilters = ({
   params,
-  allGenres,
+  mediaGenres,
 }: {
-  params: Params;
-  allGenres: Genre[];
+  params: ExploreSearchParams;
+  mediaGenres: Genre[];
 }) => {
   const router = useRouter();
 
   const [sort, ord] = params.sortBy.split(".");
   const [sortBy, setSortBy] = useState(sort);
   const [order, setOrder] = useState(ord);
-  const [rating, setRating] = useState(params.rating);
-  const [decade, setDecade] = useState(params.decade);
+  const [rating, setRating] = useState<string>(params.rating);
+  const [decade, setDecade] = useState<string>(params.decade);
   const [genre, setGenre] = useState(params.genre);
 
   useEffect(() => {
@@ -133,7 +129,7 @@ const MediaFilters = ({
     setGenre(String(params.genre));
   }, [params]);
 
-  const navigateTo = (params: Params) => {
+  const navigateTo = (params: object) => {
     router.push(`./explore/${searchParamsToString(params)}`);
   };
 
@@ -242,7 +238,7 @@ const MediaFilters = ({
               <SelectItem key={"0"} value={"0"}>
                 {"All Genres"}
               </SelectItem>
-              {allGenres.map((item) => (
+              {mediaGenres?.map((item) => (
                 <SelectItem key={item.id} value={String(item.id)}>
                   {item.name}
                 </SelectItem>

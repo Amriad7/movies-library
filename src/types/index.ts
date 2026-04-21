@@ -27,6 +27,13 @@ type Serie = {
 type Media = Movie | Serie;
 type MediaType = Media["type"];
 
+type MediaListResult = {
+  page: number;
+  results: Media[];
+  total_pages: number;
+  total_results: number;
+};
+
 type Genre = {
   id: number;
   name: string;
@@ -68,9 +75,10 @@ export type {
   Movie,
   Serie,
   Media,
-  MediaType,
+  Cast,
   Genre,
+  MediaType,
   MovieExtended,
   SerieExtended,
-  Cast,
+  MediaListResult,
 };

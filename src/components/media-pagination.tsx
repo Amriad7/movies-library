@@ -5,44 +5,53 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { clamp, searchParamsToString } from "@/lib/utils";
+import { ExploreSearchParams, HomeSearchParams } from "@/lib/validations";
 
 const MediaPagination = ({
   params,
-  currentPage,
   totalPages,
 }: {
-  params: object;
-  currentPage: number;
   totalPages: number;
+  params: Omit<HomeSearchParams, ""> | Omit<ExploreSearchParams, "">;
 }) => {
   const router = useRouter();
-  const [page, setPage] = useState(String(currentPage));
-  const nextPage = clamp(currentPage + 1, 1, totalPages);
-  const prevPage = clamp(currentPage - 1, 1, totalPages);
+  const [page, setPage] = useState(String(params.page));
+  const nextPage = clamp(params.page + 1, 1, totalPages);
+  const prevPage = clamp(params.page - 1, 1, totalPages);
 
   const handlePageInputChange = () => {
-    const moveToPage = clamp(Number(page) || 1, 1, totalPages);
-    router.push(searchParamsToString({ ...params, page: moveToPage }));
+    const inputPage = clamp(Number(page) || 1, 1, totalPages);
+    router.push(searchParamsToString({ ...params, page: inputPage }));
   };
 
   useEffect(() => {
-    setPage(String(currentPage));
-  }, [currentPage]);
+    setPage(String(params.page));
+  }, [params.page]);
 
   return (
     <div className="flex items-center justify-center gap-2">
+      <Button size={"icon"} variant={"secondary"} asChild>
+        <Link href={searchParamsToString({ ...params, page: 1 })}>
+          <ChevronsLeft />
+        </Link>
+      </Button>
       <Button size={"icon"} asChild>
         <Link href={searchParamsToString({ ...params, page: prevPage })}>
           <ChevronLeft />
         </Link>
       </Button>
-      <InputGroup className="max-w-40">
+      <InputGroup className="max-w-32">
         <InputGroupInput
           value={page}
           placeholder="page"
@@ -53,11 +62,18 @@ const MediaPagination = ({
             }
           }}
         />
-        <InputGroupAddon align="inline-end"> / {totalPages}</InputGroupAddon>
+        <InputGroupAddon align="inline-end" className="pr-4">
+          / {totalPages}
+        </InputGroupAddon>
       </InputGroup>
       <Button size={"icon"} asChild>
         <Link href={searchParamsToString({ ...params, page: nextPage })}>
           <ChevronRight />
+        </Link>
+      </Button>
+      <Button size={"icon"} variant={"secondary"} asChild>
+        <Link href={searchParamsToString({ ...params, page: totalPages })}>
+          <ChevronsRight />
         </Link>
       </Button>
     </div>

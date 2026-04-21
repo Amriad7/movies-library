@@ -1,9 +1,16 @@
 import { ThemeToggle } from "@/components/theme-toggle";
-import { SidebarToggle } from "./sidebar-toggle";
+import { SidebarToggle } from "@/components/sidebar-toggle";
+import { cn } from "@/lib/utils";
 
-const AppHeader = () => {
+const AppHeader = ({ className, ...props }: React.ComponentProps<"header">) => {
   return (
-    <header className="flex items-center gap-3 fixed z-50 w-full p-4 bg-background border-b S">
+    <header
+      className={cn(
+        "flex items-center gap-3 fixed z-50 w-full p-4 bg-background",
+        className
+      )}
+      {...props}
+    >
       <SidebarToggle />
       <ThemeToggle />
     </header>

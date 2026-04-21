@@ -1,6 +1,7 @@
 "server-only";
 
-import { Genre, Media, MediaType, MovieExtended, SerieExtended } from "@/types";
+import { Genre, MediaListResult, MovieExtended, SerieExtended } from "@/types";
+import { ExploreSearchParams, HomeSearchParams } from "./validations";
 
 const get = async (endpoint: string): Promise<any> => {
   const url = `https://api.themoviedb.org/3${endpoint}`;
@@ -20,19 +21,13 @@ const get = async (endpoint: string): Promise<any> => {
 };
 
 const getMediaList = async (
-  type: MediaType,
-  list: string,
-  page: number
-): Promise<{
-  page: number;
-  results: Media[];
-  total_pages: number;
-  total_results: number;
-}> => {
+  params: HomeSearchParams
+): Promise<MediaListResult> => {
+  const { type, list, page } = params;
   return get(`/${type}/${list}?page=${page}`).then((data) => ({
     ...data,
     total_pages: Math.min(data.total_pages, 500),
-    results: data.results.map((m: any) => ({ ...m, type })),
+    results: data.results?.map((m: any) => ({ ...m, type })) || [],
   }));
 };
 
@@ -68,27 +63,20 @@ async function getAllGenres(type: string): Promise<Genre[]> {
   return get(`/genre/${type}/list?language=en`).then((data) => data.genres);
 }
 
-const getExploreMedia = async (
-  type: MediaType,
-  page: number,
-  sortBy: string,
-  rating: string,
-  decade: string,
-  genre: string
-): Promise<{
-  page: number;
-  results: Media[];
-  total_pages: number;
-  total_results: number;
-}> => {
+const getExploreMedia: (
+  params: ExploreSearchParams
+) => Promise<MediaListResult> = async (params) => {
+  const { type, page, sortBy, rating, decade, genre } = params;
+
   const startYear = Number(decade) || 1000;
   const endYear = startYear ? startYear + 10 : 3000;
+
   return get(
     type === "movie"
-      ? `/discover/${type}?page=${page}&sort_by=${sortBy}&vote_average.gte=${rating}&primary_release_date.gte=${startYear}-01-01&primary_release_date.lte=${
+      ? `/discover/${type}?include_adult=false&page=${page}&sort_by=${sortBy}&vote_average.gte=${rating}&primary_release_date.gte=${startYear}-01-01&primary_release_date.lte=${
           endYear - 1
         }-12-31${Number(genre) ? `&with_genres=${genre}` : ""}`
-      : `/discover/${type}?page=${page}&sort_by=${sortBy}&vote_average.gte=${rating}&air_date.gte=${startYear}-01-01&air_date.lte=${
+      : `/discover/${type}?include_adult=false&page=${page}&sort_by=${sortBy}&vote_average.gte=${rating}&air_date.gte=${startYear}-01-01&air_date.lte=${
           endYear - 1
         }-12-31${Number(genre) ? `&with_genres=${genre}` : ""}`
   ).then((data) => {

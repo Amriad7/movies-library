@@ -5,7 +5,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -30,25 +29,33 @@ const items = [
   { label: "Watch List", link: "/watchlist", icon: ListVideoIcon },
 ];
 
+const Header = () => {
+  return (
+    <header className="p-3 space-y-1 overflow-hidden text-nowrap">
+      <h2 className="text-2xl text-primary font-bold">Movies Tube</h2>
+      <p className="text-sm text-muted-foreground">
+        Your personal movie library
+      </p>
+    </header>
+  );
+};
+
+const Logo = () => {
+  return (
+    <div className="flex items-center justify-center pt-2 text-2xl text-primary font-bold">
+      M
+    </div>
+  );
+};
+
 export const AppSidebar = () => {
   const pathname = usePathname();
   const { state } = useSidebar();
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="overflow-hidden text-nowrap">
-        {state === "expanded" ? (
-          <header className="p-3 space-y-1">
-            <h2 className="text-2xl text-primary font-bold">Movies Tube</h2>
-            <p className="text-sm text-muted-foreground">
-              Your personal movie library
-            </p>
-          </header>
-        ) : (
-          <div className="flex items-center justify-center pt-2 text-2xl text-primary font-bold">
-            M
-          </div>
-        )}
+      <SidebarHeader>
+        {state === "expanded" ? <Header /> : <Logo />}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

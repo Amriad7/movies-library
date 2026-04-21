@@ -7,6 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { searchParamsToString } from "@/lib/utils";
+import { HomeSearchParams } from "@/lib/validations";
 import { MediaType } from "@/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -27,39 +29,29 @@ export const mediaLists = {
   ],
 } as const;
 
-export const movieListValues = mediaLists.movie.map(({ value }) => value);
-export const tvListValues = mediaLists.tv.map(({ value }) => value);
-
-const ListSelect = ({
-  type,
-  currentList,
-}: {
-  type: MediaType;
-  currentList: string;
-}) => {
+const ListSelect = ({ params }: { params: Omit<HomeSearchParams, "page"> }) => {
   const router = useRouter();
-  const [list, setList] = useState(currentList);
+  const [list, setList] = useState<string>(params.list);
+
+  const handleValueChange = (value: string) => {
+    setList(value);
+    router.push(searchParamsToString({ ...params, list: value }));
+  };
 
   useEffect(() => {
-    setList(currentList);
-  }, [currentList]);
+    setList(params.list);
+  }, [params.list]);
 
   return (
-    <Select
-      value={list}
-      onValueChange={(value) => {
-        setList(value);
-        router.push(`./?type=${type}&list=${value}`);
-      }}
-    >
+    <Select value={list} onValueChange={handleValueChange}>
       <SelectTrigger className="w-45">
         <SelectValue placeholder="Select a list" />
       </SelectTrigger>
       <SelectContent position="popper">
         <SelectGroup>
-          {mediaLists[type].map((l) => (
-            <SelectItem key={l.name} value={l.value}>
-              {l.name}
+          {mediaLists[params.type].map(({ name, value }) => (
+            <SelectItem key={name} value={value}>
+              {name}
             </SelectItem>
           ))}
         </SelectGroup>

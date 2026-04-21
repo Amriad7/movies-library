@@ -1,6 +1,6 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Manrope, Plus_Jakarta_Sans } from "next/font/google";
-import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -32,20 +32,18 @@ export default function RootLayout({
         className={`${manrope.className} ${plusJakartaSans.className} antialiased`}
       >
         <ThemeProvider
+          enableSystem
           attribute="class"
           defaultTheme="dark"
-          enableSystem
           disableTransitionOnChange
         >
-          <div className="max-w-screen">
-            <SidebarProvider>
-              <AppSidebar />
-              <div className="w-full min-w-0">
-                <AppHeader />
-                <main className="mt-17">{children}</main>
-              </div>
-            </SidebarProvider>
-          </div>
+          <SidebarProvider>
+            <AppSidebar />
+            <div className="w-full min-w-0">
+              <AppHeader className="h-18" />
+              <main className="mt-18">{children}</main>
+            </div>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>
