@@ -1,5 +1,7 @@
 # 📝 TASK LIST
 
+## TOP PROIRITY
+
 [x] add genre name in card
 [x] fix search params parse
 [x] better handle errors / missing data
@@ -26,6 +28,7 @@
 [x] serie sort filter better parse
 [x] overall code cleanup
 [x] no adult movies!
+[x] resize everything down
 [ ] watch trailer
 
 # Nice to have
@@ -35,3 +38,4 @@
 [ ] add skeleton/loaders?
 [ ] multi language support
 [ ] add a real logo
+[ ] cast google search
