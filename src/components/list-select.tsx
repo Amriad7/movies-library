@@ -9,9 +9,7 @@ import {
 } from "@/components/ui/select";
 import { searchParamsToString } from "@/lib/utils";
 import { HomeSearchParams } from "@/lib/validations";
-import { MediaType } from "@/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export const mediaLists = {
   movie: [
@@ -31,19 +29,13 @@ export const mediaLists = {
 
 const ListSelect = ({ params }: { params: Omit<HomeSearchParams, "page"> }) => {
   const router = useRouter();
-  const [list, setList] = useState<string>(params.list);
 
   const handleValueChange = (value: string) => {
-    setList(value);
     router.push(searchParamsToString({ ...params, list: value }));
   };
 
-  useEffect(() => {
-    setList(params.list);
-  }, [params.list]);
-
   return (
-    <Select value={list} onValueChange={handleValueChange}>
+    <Select value={params.list} onValueChange={handleValueChange}>
       <SelectTrigger className="w-45">
         <SelectValue placeholder="Select a list" />
       </SelectTrigger>

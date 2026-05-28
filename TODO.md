@@ -31,6 +31,15 @@
 [x] resize everything down
 [ ] watch trailer
 
+[x] implement searchbar component
+
+[ ] add signin / signup page
+[ ] implements login/logout functionality
+[ ] add heart and wishlist buttons to card
+[ ] add favorite and watchlist pages
+[ ] change placholder to shadcn state component
+[ ] refactor filters + (list select) into one component/hook?
+
 # Nice to have
 
 [x] add alt property
@@ -39,3 +48,4 @@
 [ ] multi language support
 [ ] add a real logo
 [ ] cast google search
+[ ] micro interactivity / animations

@@ -1,4 +1,4 @@
-"server-only";
+// "use server";
 
 import { Genre, MediaListResult, MovieExtended, SerieExtended } from "@/types";
 import { ExploreSearchParams, HomeSearchParams } from "./validations";
@@ -14,7 +14,10 @@ const get = async (endpoint: string): Promise<any> => {
   };
 
   return fetch(url, options)
-    .then((res) => res.json())
+    .then((res) => {
+      const data = res.json();
+      return data;
+    })
     .catch((err) => {
       console.error(err);
     });
@@ -87,10 +90,33 @@ const getExploreMedia: (
     };
   });
 };
+
+const getSearchResults = async (query: string) => {
+  const url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+    query
+  )}&include_adult=false&language=en-US&page=1`;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+    },
+  };
+
+  console.log("token", process.env.TMDB_ACCESS_TOKEN);
+
+  return fetch(url, options)
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
 export const API = {
   getMediaList,
   getMovie,
   getSerie,
   getAllGenres,
   getExploreMedia,
+  getSearchResults,
 };

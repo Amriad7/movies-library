@@ -41,7 +41,7 @@ export default function RootLayout({
             <AppSidebar />
             <div className="w-full min-w-0">
               <AppHeader className="h-18" />
-              <main className="mt-18">{children}</main>
+              <main>{children}</main>
             </div>
           </SidebarProvider>
         </ThemeProvider>
